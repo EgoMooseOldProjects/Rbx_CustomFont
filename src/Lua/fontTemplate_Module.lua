@@ -9,7 +9,7 @@
 -- Place atlas image assets in this table in the order they were generated
 local img = {
 	[1] = "rbxassetid://";
-}
+};
 
 -- Paste the generated .fnt JSON inbetween these brackets
 local json = [[]];
