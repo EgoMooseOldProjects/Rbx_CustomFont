@@ -388,7 +388,7 @@ function new_spriteObject(font_name, obj_class)
 		
 		-- yAlignment
 		for _, sprite in pairs(sprites) do
-			sprite.Position = sprite.Position + UDim2.new(0, 0, yAlign, -height * yAlign); -- This needs work!
+			sprite.Position = sprite.Position + UDim2.new(0, 0, yAlign, -height * yAlign);
 		end;
 	end;
 	
@@ -549,4 +549,4 @@ for _, class in pairs({"TextLabel", "TextBox", "TextButton", "TextReplace"}) do
 	end;
 end;
 
-return create
+return create;
