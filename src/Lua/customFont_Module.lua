@@ -3,7 +3,7 @@
 	Sprite creation module for custom text fonts.
 	@author EgoMoose
 	@link N/A
-	@date 26/09/2015
+	@date 27/09/2015
 --]]
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -54,6 +54,11 @@ function find_closest(tab, num)
 		end;
 	end;
 	return closest;
+end;
+
+function round(num, idp)
+	local mult = 10^(idp or 0);
+	return math.floor(num * mult + 0.5) / mult;
 end;
 
 -- Old split method would ignore lone new lines. This is a better method, although a little bit more technical.
@@ -277,7 +282,9 @@ function new_spriteObject(font_name, obj_class)
 		local text = string.gsub(text, "\t", string.rep(" ", 4));
 		local lines, words = split(text, "\n"), {};
 		for i, line in ipairs(lines) do
-			for word in string.gmatch(line, "[^%s]+ *") do table.insert(words, word); end;
+			for word in string.gmatch(line, "[^%s]+ *") do
+				table.insert(words, word);
+			end;
 			if newlines and i < #lines then table.insert(words, "\n"); end;
 		end;
 		return words;
@@ -286,28 +293,33 @@ function new_spriteObject(font_name, obj_class)
 	local function getLines(text)
 		local text = string.gsub(text, "\t", string.rep(" ", 4));
 		local lines, nlines = split(text, "\n"), {};
-		for i, line in ipairs(lines) do table.insert(nlines, line); end;
+		for i, line in ipairs(lines) do
+			table.insert(nlines, line);
+			--if i < #lines then table.insert(nlines, ""); end;
+		end;
 		return nlines;
 	end;
-	
+
 	local function wrapText(text)
-		local words, maxWidth, lines, fullWidth, index = getWords(text, true), real_object.AbsoluteSize.x, {}, 0, 1;
-		for _, word in ipairs(words) do
+		local words, lines = getWords(text, true), {};
+		local maxWidth, fullWidth, index = public().AbsoluteSize.x, 0, 1;
+		for i, word in pairs(words) do
 			if word ~= "\n" then
 				local width = getPixelLength(word);
-				if fullWidth < 1 then
+				if fullWidth < 1 then -- Get at least one word on the line
 					lines[index] = word;
 				elseif width + fullWidth <= maxWidth then
-					lines[index] = table.concat({lines[index], word}, "");
+					lines[index] = lines[index]..word;
 				else
-					fullWidth = 0;
 					index = index + 1;
+					fullWidth = 0;
 					lines[index] = word;
-				end
+				end;
+				fullWidth = fullWidth + width;
 			else
-				fullWidth = 0;
 				index = index + 1;
-				lines[index] = word;
+				fullWidth = 0;
+				lines[index] = "";
 			end;
 		end;
 		return lines;
@@ -375,9 +387,8 @@ function new_spriteObject(font_name, obj_class)
 		end;
 		
 		-- yAlignment
-		local height_adjust = yAlign == 1 and -height*2 or (yAlign == 0.5 and -height) or 0;
 		for _, sprite in pairs(sprites) do
-			sprite.Position = sprite.Position + UDim2.new(0, 0, yAlign, height * yAlign + height_adjust);
+			sprite.Position = sprite.Position + UDim2.new(0, 0, yAlign, -height * yAlign); -- This needs work!
 		end;
 	end;
 	
