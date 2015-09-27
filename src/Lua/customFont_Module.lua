@@ -44,6 +44,7 @@ function contains(tab, element, keys)
 end;
 
 function find_closest(tab, num)
+	table.sort(tab)
 	local closest, diff;
 	for _, onum in pairs(tab) do
 		local new_diff = (num - onum) >= 0 and (num - onum) or -(num - onum);
@@ -455,16 +456,18 @@ function new_spriteObject(font_name, obj_class)
 	end;
 	
 	local function buildFakeProperties()
-		for key, thing in pairs(this) do
+		local props = settings.use_enums and {"FontName", "Scale"} or {"FontName", "Scale", "FontPx"};
+		for key, prop in pairs(props) do
+			local thing = this[prop];
 			if type(thing) == "table" then
 				local class = type(thing.Value);
 				if class ~= "function" then
 					local rep = string.gsub(class, "^.", string.upper(string.sub(class, 1, 1))).."Value";
 					local item = Instance.new(rep, public());
-					item.Name = key;
+					item.Name = prop;
 					item.Value = thing.Value;
 					table.insert(events, item.Changed:connect(function(newValue)
-						this[key].Value = newValue;
+						this[prop].Value = newValue;
 					end));
 					table.insert(fakeProps, item);
 				end
@@ -531,7 +534,7 @@ end;
 local create = {};
 for _, class in pairs({"TextLabel", "TextBox", "TextButton", "TextReplace"}) do
 	create[string.sub(class, 5)] = function(font_name, object)
-		return new_spriteObject(font_name, class == "TextReplace" and object or string.sub(class, 5));
+		return new_spriteObject(font_name, class == "TextReplace" and object or class);
 	end;
 end;
 
