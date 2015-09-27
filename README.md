@@ -22,7 +22,7 @@ Here is an example of what it can do:
 
 If you plan to simply use the module and have no intention of using any fonts other than those created by myself and/or other users than things will be very easy for you assuming you have any experience modifying/creating normal GUI objects in roblox.
 
-Please read [this]() for more information on API. 
+Please read [this](/docs/API_document.md) for more information on API. 
 
 #### Making your own font
 
@@ -31,4 +31,4 @@ Now if you plan on making your own font there are a few extra steps that you nee
 - [Pillow](https://github.com/python-pillow/Pillow) - An image library for python.
 - [gdx-fontpack](https://github.com/mattdesl/gdx-fontpack) - A bitmap font packing tool (Requires Java).
 
-For more on this process read [this]().
+For more on this process read [this](/docs/Font_document.md).
