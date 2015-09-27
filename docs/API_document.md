@@ -15,7 +15,7 @@ local fonts = require(some_location.rbx_CustomFont);
 
 local sprite_label = fonts.Label("Times New Roman");
 local sprite_box = fonts.Box("Times New Roman");
-local sprite_button = fonts.button("Times New Roman");
+local sprite_button = fonts.Button("Times New Roman");
 ```
 
 Replace on the other hand requires two parameters, the font name and the object you're replacing:
