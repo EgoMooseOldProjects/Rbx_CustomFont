@@ -78,7 +78,7 @@ def build_sizes():
 			# Update render values
 			data["x"] = last_x;
 			data["y"] = last_y;
-			data["height"] = build_data[font_name]["info"]["lineHeight"]#data["height"] + data["yoffset"];
+			data["height"] = build_data[font_name]["info"]["lineHeight"] # data["height"] + data["yoffset"];
 			del data["yoffset"]
 			build_data[font_name]["characters"][character.attrib["id"]] = data;
 			# Update for next crop
