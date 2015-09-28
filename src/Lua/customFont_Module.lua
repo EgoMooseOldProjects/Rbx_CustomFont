@@ -202,6 +202,7 @@ function new_fontSettings(module, real_object)
 				if rawget(t, k) then return rawget(t, k); else warn(string.char(k), "is not a valid character. Replaced with, \"".. replace.. "\""); return rawget(t, tostring(string.byte(replace))); end; end;			
 			mt.__metatable = "The metatable is locked.";
 		end;
+		
 		-- If a size isn't found picks next closest
 		setmetatable(this.data.sizes, {});
 		local mt = getmetatable(this.data.sizes);
@@ -311,12 +312,14 @@ function new_spriteObject(font_name, obj_class)
 				elseif width + fullWidth <= maxWidth then
 					lines[index] = lines[index]..word;
 				else
+					lines[index] = string.gsub(lines[index], " +$", "");
 					index = index + 1;
 					fullWidth = 0;
 					lines[index] = word;
 				end;
 				fullWidth = fullWidth + width;
 			else
+				lines[index] = string.gsub(lines[index], " +$", "");
 				index = index + 1;
 				fullWidth = 0;
 				lines[index] = "";
@@ -375,7 +378,7 @@ function new_spriteObject(font_name, obj_class)
 	end;
 	
 	local function drawLines(text)
-		-- Font Scaled - needs optimization(?)
+		-- FontScaled (picks best size)
 		if real_object.TextScaled then
 			settings.size = tostring(settings.data.info.sizes[#settings.data.info.sizes]);
 			for _, size in ipairs(settings.data.info.sizes) do
@@ -500,10 +503,10 @@ function new_spriteObject(font_name, obj_class)
 						this[prop].Value = newValue;
 					end));
 					table.insert(fakeProps, item);
-				end
+				end;
 			end;
 		end;
-	end
+	end;
 	
 	local function init()
 		-- Setup pseudo events
@@ -532,7 +535,7 @@ function new_spriteObject(font_name, obj_class)
 		clearAllText();
 		real_object.TextTransparency = self.Transparency;
 		self = nil;
-	end
+	end;
 	
 	function this:ClearAllChildren()
 		for _, child in pairs(public():GetChildren()) do
