@@ -362,7 +362,7 @@ function new_spriteObject(font_name, obj_class)
 			local byte = tostring(string.byte(string.sub(line, index, index)));
 			-- Place the sprite
 			local sprite = drawSprite(byte);
-			sprite.Position = sprite.Position + UDim2.new(xAlign, width, 0, height);
+			sprite.Position = sprite.Position + UDim2.new(0, width, 0, height);
 			sprite.Parent = real_object;
 			-- Prep width for character
 			width = width + (settings.data.sizes[settings.size].characters[byte].xadvance * this.Scale.Value);
@@ -373,7 +373,7 @@ function new_spriteObject(font_name, obj_class)
 		-- xAlignment
 		for _, sprite in pairs(sprites) do
 			table.insert(allSprites, sprite);
-			sprite.Position = sprite.Position - multiplyUDim(UDim2.new(0, width, 0, 0), xAlign);
+			sprite.Position = sprite.Position + UDim2.new(0, (xAlign * real_object.AbsoluteSize.x) - xAlign * width, 0, 0);
 		end;
 	end;
 	
