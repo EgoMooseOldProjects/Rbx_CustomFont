@@ -6,6 +6,10 @@
 	@date 28/09/2015
 --]]
 
+-- Github	: https://github.com/EgoMoose/Rbx_CustomFont
+-- API		: https://github.com/EgoMoose/Rbx_CustomFont/wiki/API
+-- Fonts	: https://github.com/EgoMoose/Rbx_CustomFont/wiki/Making-your-own-font
+
 ------------------------------------------------------------------------------------------------------------------------------
 --// Setup
 
@@ -224,7 +228,7 @@ function new_fontSettings(module, real_object)
 	local function init()
 		preload();
 		useenums();
-		failsafe();	
+		failsafe();
 	end;
 	
 	--/ Run
@@ -474,7 +478,7 @@ function new_spriteObject(font_name, obj_class)
 			else
 				transOverflow = false;
 			end;
-			if settings.use_enums and prop == "FontSize" then this.FontPx.Value = tonumber(string.match(public().FontSize.Name, "%d+$")); end
+			if settings.use_enums and prop == "FontSize" then this.FontPx.Value = tonumber(string.match(real_object.FontSize.Name, "%d+$")); end;
 			reDraw();
 		end));
 		
@@ -513,6 +517,7 @@ function new_spriteObject(font_name, obj_class)
 		for key, value in pairs(this) do
 			this[key] = new_pseudoEvent(this, key);
 		end;
+		if settings.use_enums then this.FontPx.Value = tonumber(string.match(real_object.FontSize.Name, "%d+$")); end;
 		set_connections();
 		buildFakeProperties();
 		reDraw();
