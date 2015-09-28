@@ -9,10 +9,10 @@ function posFrom(frame, pos, x, y)
 	);
 end;
 
-local label = font.Label("Times New Roman");
+local label = font.Label("Yellowtail");
 label.Text = "Ego's the name, mediocre's the game.";
 label.Size = UDim2.new(0.3, 0, 0.2, 0);
-label.FontSize = Enum.FontSize.Size18;
+label.FontSize = Enum.FontSize.Size96;
 label.TextColor3 = Color3.new();
 posFrom(label, UDim2.new(0.5, 0, 0.5, 0), 0.5, 0.5);
 label.Parent = script.Parent; -- Under a screengui
