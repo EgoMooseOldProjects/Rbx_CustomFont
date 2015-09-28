@@ -3,7 +3,7 @@
 	Sprite creation module for custom text fonts.
 	@author EgoMoose
 	@link N/A
-	@date 27/09/2015
+	@date 28/09/2015
 --]]
 
 ------------------------------------------------------------------------------------------------------------------------------
@@ -270,10 +270,10 @@ function new_spriteObject(font_name, obj_class)
 		return contains({"Right", "Bottom"}, enum.Name) and 1 or (contains({"Left", "Top"}, enum.Name) and 0 or 0.5);
 	end;
 	
-	local function getPixelLength(text)
+	local function getPixelLength(text, fsize)
 		local length = 0;
 		for index = 1, string.len(text) do
-			length = length + settings.data.sizes[settings.size].characters[tostring(string.byte(string.sub(text, index, index)))].xadvance;
+			length = length + settings.data.sizes[tostring(fsize)].characters[tostring(string.byte(string.sub(text, index, index)))].xadvance;
 		end;
 		return length;
 	end;
@@ -300,12 +300,12 @@ function new_spriteObject(font_name, obj_class)
 		return nlines;
 	end;
 
-	local function wrapText(text)
+	local function wrapText(text, fsize)
 		local words, lines = getWords(text, true), {};
 		local maxWidth, fullWidth, index = public().AbsoluteSize.x, 0, 1;
 		for i, word in pairs(words) do
 			if word ~= "\n" then
-				local width = getPixelLength(word);
+				local width = getPixelLength(word, fsize or settings.size);
 				if fullWidth < 1 then -- Get at least one word on the line
 					lines[index] = word;
 				elseif width + fullWidth <= maxWidth then
@@ -375,9 +375,28 @@ function new_spriteObject(font_name, obj_class)
 	end;
 	
 	local function drawLines(text)
-		-- Get some info to work with
-		local lines = real_object.TextWrapped and wrapText(text) or getLines(text);
+		-- Font Scaled - needs optimization(?)
+		if real_object.TextScaled then
+			settings.size = tostring(settings.data.info.sizes[#settings.data.info.sizes]);
+			for _, size in ipairs(settings.data.info.sizes) do
+				-- Collect data
+				local lines = real_object.TextWrapped and wrapText(text, size) or getLines(text);
+				local y, x = settings.data.sizes[tostring(size)].info.lineHeight * this.Scale.Value * #lines, {0};
+				for _, line in pairs(lines) do
+					table.insert(x, getPixelLength(text, size));
+				end
+				x = math.max(unpack(x));
+				-- Calculate
+				if (real_object.TextWrapped and y <= real_object.AbsoluteSize.y) or x <= real_object.AbsoluteSize.x then
+					settings.size = tostring(size);
+					break;
+				end;
+			end;
+		end;
+		
+		-- Grab needed values
 		local yAlign, sprites, height = getAlignMultiplier(real_object.TextYAlignment), {}, 0;
+		local lines = real_object.TextWrapped and wrapText(text) or getLines(text);
 		local lineHeight = settings.data.sizes[settings.size].info.lineHeight * this.Scale.Value;
 		
 		-- Draw lines
