@@ -10,7 +10,6 @@ Roblox's font system is severly lacking when it comes to choices of size and loo
 
 Pretty much anything the current font system can do with the exclusion of:
 - Text stroke
-- Text scaled
 - [Background transparency](http://anaminus.tumblr.com/post/38580091687/on-the-order-of-roblox-guis)
 
 Here is an example of what it can do:
