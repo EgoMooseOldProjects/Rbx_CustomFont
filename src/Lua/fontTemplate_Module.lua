@@ -2,7 +2,7 @@
 	Font template
 	@ Font Name_here
 	@ Sizes Sizes_here
-	@ Author Username_here
+	@ Author Author_here
 	@ Link link_here
 --]]
 
