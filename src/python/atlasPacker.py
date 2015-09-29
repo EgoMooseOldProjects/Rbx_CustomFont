@@ -44,11 +44,12 @@ def get_lineHeight(font_name):
 def build_sizes():
 	for font_name in font_names:
 		# Data and variable setup
+		maxHeight, lHeight = get_lineHeight(font_name), int(font_root[font_name][1].attrib["lineHeight"])
 		last_x, last_y = 0, 0;
 		build_data[font_name] = {
 			"characters" : {},
 			"info" : {
-				"lineHeight" : get_lineHeight(font_name), #int(font_root[font_name][1].attrib["lineHeight"]),
+				"lineHeight" : maxHeight > lHeight and maxHeight or lHeight,
 				"image" : image.new("RGBA", (1024, 1024)),
 				"atlas" : 0,
 				"total_y" : 0
@@ -78,12 +79,12 @@ def build_sizes():
 			# Update render values
 			data["x"] = last_x;
 			data["y"] = last_y;
-			data["height"] = build_data[font_name]["info"]["lineHeight"] # data["height"] + data["yoffset"];
+			data["height"] = build_data[font_name]["info"]["lineHeight"]
 			del data["yoffset"]
 			build_data[font_name]["characters"][character.attrib["id"]] = data;
 			# Update for next crop
 			last_x = last_x + data["width"];
-		build_data[font_name]["info"]["total_y"] = last_y + build_data[font_name]["info"]["lineHeight"];
+		build_data[font_name]["info"]["total_y"] = last_y + build_data[font_name]["info"]["lineHeight"] + 10;
 		build_data[font_name]["info"]["lineHeight"] = int(font_root[font_name][1].attrib["lineHeight"]);
 
 def build_json(data):
