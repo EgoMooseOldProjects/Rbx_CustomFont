@@ -19,7 +19,7 @@ Here is an example of what it can do:
 
 #### Using the module
 
-If you plan to simply use the module and have no intention of using any fonts other than those created by myself and/or other users than things will be very easy for you assuming you have any experience modifying/creating normal GUI objects in roblox.
+If you plan to simply use the module and have no intention of using any fonts other than those created by myself and/or other users then things will be very easy for you assuming you have any experience modifying/creating normal GUI objects in roblox.
 
 Please read [this](https://github.com/EgoMoose/Rbx_CustomFont/wiki/API) for more information on API. 
 
