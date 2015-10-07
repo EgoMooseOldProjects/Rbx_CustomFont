@@ -203,7 +203,13 @@ function new_fontSettings(module, real_object)
 			setmetatable(char_set.characters, {})
 			local mt = getmetatable(char_set.characters);
 			mt.__index = function(t, k) 
-				if rawget(t, k) then return rawget(t, k); else warn(string.char(k), "is not a valid character. Replaced with, \"".. replace.. "\""); return rawget(t, tostring(string.byte(replace))); end; end;			
+				if rawget(t, k) then 
+					return rawget(t, k);
+				else 
+					warn(string.char(k), "is not a valid character. Replaced with, \"".. replace.. "\"");
+					return rawget(t, tostring(string.byte(replace)));
+				end;
+			end;			
 			mt.__metatable = "The metatable is locked.";
 		end;
 		
