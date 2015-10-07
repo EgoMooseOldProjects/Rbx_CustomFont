@@ -31,3 +31,7 @@ Now if you plan on making your own font there are a few extra steps that you nee
 - [gdx-fontpack](https://github.com/mattdesl/gdx-fontpack) - A bitmap font packing tool (Requires Java).
 
 For more on this process read [this](https://github.com/EgoMoose/Rbx_CustomFont/wiki/Making-your-own-font).
+
+## Can I use this for my own project!
+
+Absolutely! Just make sure to read the [license](https://github.com/EgoMoose/Rbx_CustomFont/blob/master/LICENSE.md).
