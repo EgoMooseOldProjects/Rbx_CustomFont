@@ -34,4 +34,4 @@ For more on this process read [this](https://github.com/EgoMoose/Rbx_CustomFont/
 
 ## Can I use this for my own project!
 
-Absolutely! Just make sure to read the [license](https://github.com/EgoMoose/Rbx_CustomFont/blob/master/LICENSE.md).
+Absolutely! Just make sure to read the [license](https://github.com/EgoMoose/Rbx_CustomFont/blob/master/LICENSE).
