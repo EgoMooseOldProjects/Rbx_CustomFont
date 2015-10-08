@@ -98,7 +98,7 @@ end;
 --// Classes
 
 function new_wrap(object, addition)
-	local this = setmetatable({}, {});
+	local this = newproxy(true); --setmetatable({}, {});
 	
 	--/ Private functions
 	
