@@ -1,5 +1,5 @@
 --[[
-	Font sprites module
+	Rbx_CustomFont
 	Sprite creation module for custom text fonts.
 	@author EgoMoose
 	@link http://www.roblox.com/Rbx-CustomFont-item?id=230767320
