@@ -3,7 +3,7 @@
 	Sprite creation module for custom text fonts.
 	@author EgoMoose
 	@link http://www.roblox.com/Rbx-CustomFont-item?id=230767320
-	@date 28/09/2015
+	@date 17/11/2015
 --]]
 
 -- Github	: https://github.com/EgoMoose/Rbx_CustomFont
@@ -271,6 +271,14 @@ function new_spriteObject(font_name, obj_class)
 	local settings = new_fontSettings(require(font_module), real_object);
 	this.FontPx = settings.size;
 	
+	local background = Instance.new("Frame", real_object);
+	background.Name = "Sprite_background";
+	background.Size = UDim2.new(1, 0, 1, 0);
+	background.BackgroundTransparency = real_object.BackgroundTransparency < 2 and real_object.BackgroundTransparency or 0;
+	background.BackgroundColor3 = real_object.BackgroundColor3;
+	background.BorderColor3 = real_object.BorderColor3;
+	table.insert(fakeProps, background);
+	
 	real_object.TextTransparency = 2;
 	real_object.TextStrokeTransparency = 2;
 	real_object.BackgroundTransparency = 2;
@@ -480,12 +488,19 @@ function new_spriteObject(font_name, obj_class)
 			if contains({"TextTransparency", "BackgroundTransparency"}, prop) and not transOverflow then
 				transOverflow = true;
 				if prop == "TextTransparency" then this.Transparency.Value = public()[prop]; end;
+				if prop == "BackgroundTransparency" then background.BackgroundTransparency = real_object[prop]; end;
 				real_object[prop] = 2;
 			else
 				transOverflow = false;
 			end;
+			background.BackgroundColor3 = real_object.BackgroundColor3;
+			background.BorderColor3 = real_object.BorderColor3;
+			background.BorderSizePixel = real_object.BorderSizePixel;
 			if settings.use_enums and prop == "FontSize" then this.FontPx.Value = tonumber(string.match(real_object.FontSize.Name, "%d+$")); end;
-			reDraw();
+			if contains({"TextTransparency", "TextColor3", "AbsoluteSize", "TextWrapped", "TextScaled", "TextXAlignment", "TextYAlignment", "Text"}, prop) then			
+				reDraw();
+				--background.Position = UDim2.new();
+			end;
 		end));
 		
 		-- Text box
