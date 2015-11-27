@@ -305,7 +305,7 @@ function class_spritetext(font, class)
 	end;
 
 	local function wrapText(text, fs)
-		local mwidth, fwidth, index, lines = object.AbsoluteSize.x, 0, 1, {};
+		local mwidth, fwidth, index, lines = math.abs(object.AbsoluteSize.x), 0, 1, {};
 		for _, word in pairs(getWords(text, true)) do
 			if word ~= "\n" then
 				-- Allows us to get the wrapping of the current size or one in the settings (for auto-sizing)
@@ -336,7 +336,7 @@ function class_spritetext(font, class)
 			for _, line in pairs(lines) do table.insert(x, getPixelLength(line, size)); end
 			x = math.max(unpack(x));
 			-- Calculate
-			if y <= object.AbsoluteSize.y and x <= object.AbsoluteSize.x then
+			if y <= math.abs(object.AbsoluteSize.y) and x <= math.abs(object.AbsoluteSize.x) then
 				settings.size = size;
 				break;
 			end;
@@ -374,7 +374,7 @@ function class_spritetext(font, class)
 			table.insert(sprites, char);
 		end;
 		for _, sprite in pairs(sprites) do
-			sprite.Position = sprite.Position + UDim2.new(0, (xalign * object.AbsoluteSize.x) - xalign * width, 0, 0);
+			sprite.Position = sprite.Position + UDim2.new(0, (xalign * math.abs(object.AbsoluteSize.x)) - xalign * width, 0, 0);
 			table.insert(tsprites, sprite);
 		end;
 	end
