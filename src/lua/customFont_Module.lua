@@ -343,7 +343,7 @@ function class_spritetext(font, class)
 		end;
 	end;
 
-	local function drawChar(byte, parent)
+	local function drawChar(byte, parent, pbyte)
 		local sprite = imgFrame:Clone();
 		sprite.Name = byte;
 		sprite.Parent = parent;
@@ -355,23 +355,31 @@ function class_spritetext(font, class)
 		sprite.Image = settings.atlases[settings.data.sizes[settings.size].info.atlas];
 		sprite.ImageRectSize = Vector2.new(settings.data.sizes[settings.size].characters[byte].width, settings.data.sizes[settings.size].characters[byte].height);
 		sprite.ImageRectOffset = Vector2.new(settings.data.sizes[settings.size].characters[byte].x, settings.data.sizes[settings.size].characters[byte].y);
+		-- kerning data
+		local kern = 0;
+		if pbyte and settings.data.sizes[settings.size].kerning then
+			local first = settings.data.sizes[settings.size].kerning[tostring(pbyte)];
+			kern = (first and first[tostring(byte)]) or 0;
+			--if kern ~= 0 then print(kern); end;
+		end;
 		-- Frame positioning and sizeing
-		sprite.Position = UDim2.new(0, settings.data.sizes[settings.size].characters[byte].xoffset, 0, 0);
+		sprite.Position = UDim2.new(0, settings.data.sizes[settings.size].characters[byte].xoffset + kern, 0, 0);
 		sprite.Size = multiplyUDim(UDim2.new(0, settings.data.sizes[settings.size].characters[byte].width, 0, settings.data.sizes[settings.size].characters[byte].height), this.Scale);
 		table.insert(chars, sprite);
-		return sprite;
+		return sprite, kern;
 	end;
 
 	local function drawLine(text, height, tsprites)
 		local xalign = getAlignMultiplier(object.TextXAlignment);
 		local lheight = settings.data.sizes[settings.size].info.lineHeight * this.Scale;
-		local width, sprites = 0, {};
+		local width, sprites, pbyte = 0, {};
 		for i = 1, #text do
 			local byte = string.byte(string.sub(text, i, i));
-			local char = drawChar(byte, object);
+			local char, kern = drawChar(byte, object, pbyte);
 			char.Position = char.Position + UDim2.new(0, width, 0, height);
-			width = width + settings.data.sizes[settings.size].characters[byte].xadvance * this.Scale;
+			width = width + (settings.data.sizes[settings.size].characters[byte].xadvance + kern) * this.Scale;
 			table.insert(sprites, char);
+			pbyte = byte;
 		end;
 		for _, sprite in pairs(sprites) do
 			sprite.Position = sprite.Position + UDim2.new(0, (xalign * math.abs(object.AbsoluteSize.x)) - xalign * width, 0, 0);

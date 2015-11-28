@@ -41,6 +41,14 @@ def get_lineHeight(font_name):
 		heights.append(int(character.attrib["height"]) + int(character.attrib["yoffset"]));
 	return max(heights);
 
+def build_kerning(kerns):
+	kerning = {};
+	for kern in kerns:
+		first, second = str(kern.attrib["first"]), str(kern.attrib["second"]);
+		kerning[first] = kerning.get(first, {});
+		kerning[first][second] = int(kern.attrib["amount"]);
+	return kerning;
+
 def build_sizes():
 	for font_name in font_names:
 		# Data and variable setup
@@ -48,6 +56,7 @@ def build_sizes():
 		last_x, last_y = 0, 0;
 		build_data[font_name] = {
 			"characters" : {},
+			"kerning" : build_kerning(font_root[font_name][4]),
 			"info" : {
 				"lineHeight" : maxHeight > lHeight and maxHeight or lHeight,
 				"image" : image.new("RGBA", (1024, 1024)),
