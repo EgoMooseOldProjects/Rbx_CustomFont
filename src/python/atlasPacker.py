@@ -12,6 +12,9 @@
 
 # Tags
 
+import pip;
+pip.main(['install', "pillow"]);
+
 import os;
 import json;
 import xml.etree.ElementTree as eleTree;
