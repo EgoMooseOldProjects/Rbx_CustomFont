@@ -3,7 +3,7 @@
 	Sprite creation module for custom text fonts.
 	@author EgoMoose
 	@link http://www.roblox.com/Rbx-CustomFont-item?id=230767320
-	@date 21/11/2015
+	@date 01/12/2015
 --]]
 
 -- Github	: https://github.com/EgoMoose/Rbx_CustomFont
