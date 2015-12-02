@@ -180,6 +180,7 @@ function class_wrap(object, addition)
 		mt.__index = function(t, k) return addition[k] or object[k]; end;
 		mt.__newindex = function(t, k, v) if addition[k] then addition[k] = v; else object[k] = v; end; end;
 		mt.__call = function() return object; end;
+		mt.__tostring = function(t) return tostring(object); end;
 		mt.__metatable = "The metatable is locked.";
 	end;
 	
@@ -189,7 +190,7 @@ end;
 
 -- Settings class
 
-function class_settings(module)
+function class_settings(module, object)
 	local this = class_events {};
 	this.data = http:JSONDecode(module.json);
 	this.atlases = module.atlases;
@@ -233,7 +234,9 @@ function class_settings(module)
 				local c = find_closest(this.data.info.sizes, tonumber(k) or 0);
 				warn(k, "is not a valid size. Using closest size,", c);
 				this.size = c;
-				return rawget(t, c);
+				object.FontPx.Value = c;
+				pcall(function() object.FontSize = this.use_enums and "Size"..c or object.FontSize; end);
+				return t[c];
 			end;
 		});
 	end;
@@ -261,7 +264,7 @@ function class_spritetext(font, class)
 	
 	local object = not exists and serializeFrame(class) or class;
 	local font_mod, settings = fonts:FindFirstChild(font);
-	if font_mod then settings = class_settings(require(font_mod)); else error(font.." could not be found in the font directory."); end;
+	if font_mod then settings = class_settings(require(font_mod), object); else error(font.." could not be found in the font directory."); end;
 	local chars, ignore, props, events, background = {}, {}, {}, {};
 
 	this.FullText = object.Text;
@@ -375,7 +378,7 @@ function class_spritetext(font, class)
 		local width, sprites, pbyte = 0, {};
 		for i = 1, #text do
 			local byte = string.byte(string.sub(text, i, i));
-			local char, kern = drawChar(byte, object, pbyte);
+			local char, kern = drawChar(byte, background, pbyte);
 			char.Position = char.Position + UDim2.new(0, width, 0, height);
 			width = width + (settings.data.sizes[settings.size].characters[byte].xadvance + kern) * this.Scale;
 			table.insert(sprites, char);
@@ -424,10 +427,12 @@ function class_spritetext(font, class)
 			props[prop] = class;
 			table.insert(events, class.Changed:connect(function(value)
 				this[prop] = value;
-				if prop == "FontPx" then object.FontSize = settings.use_enums and "Size"..value or object.FontSize; end;
+				if prop == "FontPx" then
+					pcall(function() object.FontSize = this.use_enums and "Size"..value or object.FontSize; end);
+				end;
 				if prop == "FontName" then
 					local font_mod = fonts:FindFirstChild(value);
-					if font_mod then settings = class_settings(require(font_mod)); else error(value.." could not be found in the font directory."); end;
+					if font_mod then settings = class_settings(require(font_mod), object); else error(value.." could not be found in the font directory."); end;
 				end
 				redraw(); 
 			end));
