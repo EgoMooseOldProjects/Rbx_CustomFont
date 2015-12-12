@@ -3,7 +3,7 @@
 	Sprite creation module for custom text fonts.
 	@author EgoMoose
 	@link http://www.roblox.com/Rbx-CustomFont-item?id=230767320
-	@date 01/12/2015
+	@date 12/12/2015
 --]]
 
 -- Github	: https://github.com/EgoMoose/Rbx_CustomFont
@@ -260,6 +260,7 @@ function class_spritetext(font, class)
 	local overide_props = {
 		TextTransparency = exists and class.TextTransparency or 0;
 		BackgroundTransparency = exists and class.BackgroundTransparency or 0;
+		TextFits = false;
 	};
 	
 	local object = not exists and serializeFrame(class) or class;
@@ -388,6 +389,7 @@ function class_spritetext(font, class)
 			sprite.Position = sprite.Position + UDim2.new(0, (xalign * math.abs(object.AbsoluteSize.x)) - xalign * width, 0, 0);
 			table.insert(tsprites, sprite);
 		end;
+		return width;
 	end
 
 	local function drawLines(text)
@@ -395,17 +397,19 @@ function class_spritetext(font, class)
 		if object.TextScaled then bestSize(text); end;
 		-- Get needed valued
 		local lines = object.TextWrapped and wrapText(text) or getLines(text);
-		local yalign, sprites, height = getAlignMultiplier(object.TextYAlignment), {}, 0;
+		local yalign, sprites, height, widths = getAlignMultiplier(object.TextYAlignment), {}, 0, {0};
 		local lineHeight = settings.data.sizes[settings.size].info.lineHeight * this.Scale;
 		-- Draw lines
 		for _, line in pairs(lines) do
-			drawLine(line, height, sprites);
+			table.insert(widths, drawLine(line, height, sprites));
 			height = height + lineHeight;
 		end;
 		-- yAlignment
 		for _, sprite in pairs(sprites) do
 			sprite.Position = sprite.Position + UDim2.new(0, 0, yalign, -height * yalign);
 		end;
+		-- TextFits
+		overide_props.TextFits = object.AbsoluteSize.x > math.max(unpack(widths)) and object.AbsoluteSize.y > height;
 	end;
 
 	local function clearAllText()
@@ -490,6 +494,12 @@ function class_spritetext(font, class)
 		buildProps();
 		setconnections();
 		redraw();
+	end;
+	
+	-- public functions
+	
+	function this:TextFits()
+		return overide_props.TextFits;
 	end;
 	
 	function this:Revert()
