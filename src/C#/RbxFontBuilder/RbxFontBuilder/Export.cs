@@ -88,6 +88,9 @@ namespace RbxFontBuilder
 				{
 					Info info = new Info(face.StyleName, size);
 
+					int lineAdvance = 0;
+					int firstAdjust = 0;
+
 					float width = 0;
 					float height = 0;
 					float lineHeight = 0;
@@ -104,6 +107,8 @@ namespace RbxFontBuilder
 
 						if (face.Glyph.Metrics.Height > lineHeight)
 						{
+							// Get extra space and subtract it from first line draw?
+							firstAdjust = face.Glyph.Metrics.VerticalAdvance.ToInt32() - face.Glyph.Metrics.HorizontalBearingY.ToInt32();
 							lineHeight = (float)face.Glyph.Metrics.Height;
 						}
 
@@ -113,13 +118,13 @@ namespace RbxFontBuilder
 							uint index2 = face.GetCharIndex(k);
 
 							FTVector26Dot6 kern = face.GetKerning(index, index2, KerningMode.Default);
-                            int kernx = kern.X.ToInt32();
+							int kernx = kern.X.ToInt32();
 							int kerny = kern.Y.ToInt32();
 
 							if (kernx != 0 | kerny != 0)
 							{
 								info.addKerning(c, new Info.kerningInfo(k, kernx, kerny));
-                            }
+							}
 						}
 					}
 
@@ -147,7 +152,7 @@ namespace RbxFontBuilder
 						if (c == ' ')
 						{
 							posX += (float)face.Glyph.Metrics.HorizontalAdvance + (float)padX;
-							info.addCharacter(c, new Info.characterInfo(c, face.Glyph.Metrics.HorizontalAdvance.ToInt32(), 0, 0, 0, 0, atlas));
+							info.addCharacter(c, new Info.characterInfo(c, face.Glyph.Metrics.HorizontalAdvance.ToInt32(), 0, 0, 0, 0, 0, atlas));
 							continue;
 						}
 
@@ -173,19 +178,24 @@ namespace RbxFontBuilder
 						int imgWidth = face.Glyph.Metrics.Width.ToInt32();
 						int imgHeight = face.Glyph.Metrics.Height.ToInt32();
 						int imgX = (int)posX;
-						int imgY = (int)posY + ((int)lineHeight - imgHeight);
+						int imgY = (int)posY;
+						int yoffset = face.Glyph.Metrics.VerticalAdvance.ToInt32() - face.Glyph.Metrics.HorizontalBearingY.ToInt32();
 
 						FTBitmap ftbmp = face.Glyph.Bitmap;
 						Bitmap copy = ftbmp.ToGdipBitmap(Color.White);
 						graphics.DrawImageUnscaled(copy, imgX, imgY);
 
-						info.addCharacter(c, new Info.characterInfo(c, xadvance, imgX, imgY, imgWidth, (int)lineHeight, atlas));
+						info.addCharacter(c, new Info.characterInfo(c, xadvance, imgX, imgY, yoffset, imgWidth, imgHeight, atlas));
 
 						posX += (float)imgWidth + (float)padX;
-					}
+						lineAdvance = face.Glyph.Metrics.VerticalAdvance.ToInt32();
+                    }
 
 					posX = 0;
 					posY += lineHeight + padY;
+
+					info.lineHeight = lineAdvance;
+					info.firstAdjust = firstAdjust;
 
 					infos[face.StyleName].Add(info);
 					output += info.buildLuaString("\t\t\t") + "\n";
