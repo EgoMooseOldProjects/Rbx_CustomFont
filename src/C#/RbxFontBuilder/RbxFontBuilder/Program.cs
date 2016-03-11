@@ -35,7 +35,7 @@ namespace RbxFontBuilder
 				else
 				{
 					families[face.FamilyName] = new List<Face> { face };
-                }
+				}
 
 				// There are probably better ways of doing this, but hey I'm a C# nub
 				outputPath = System.IO.Directory.GetParent(path).FullName;

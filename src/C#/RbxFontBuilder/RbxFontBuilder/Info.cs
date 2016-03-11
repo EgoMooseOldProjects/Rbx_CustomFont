@@ -7,6 +7,8 @@ namespace RbxFontBuilder
 	{
 		public string fontName;
 		public int fontSize;
+		public int lineHeight;
+		public int firstAdjust;
 		public Dictionary<char, characterInfo> characters;
 		public Dictionary<char, Dictionary<char, kerningInfo>> kerning;
 
@@ -39,8 +41,12 @@ namespace RbxFontBuilder
 
 		public string buildLuaString(string indent)
 		{
-			StringBuilder luaString = new StringBuilder(indent + "[" + fontSize + "] = {\n" + indent + "\t" + "characters = {\n");
 			string indent2 = indent + "\t\t";
+
+			StringBuilder luaString = new StringBuilder(indent + "[" + fontSize + "] = {\n");
+			luaString.Append(indent + "\tlineHeight = " + this.lineHeight + ";").AppendLine();
+			luaString.Append(indent + "\tfirstAdjust = " + this.firstAdjust + ";").AppendLine();
+			luaString.Append(indent + "\tcharacters = {").AppendLine();
 
 			// build characters
 			foreach (KeyValuePair<char, characterInfo> kvp in characters)
@@ -51,6 +57,7 @@ namespace RbxFontBuilder
 				luaString.AppendFormat("xadvance = {0}, ", cinfo.xadvance);
 				luaString.AppendFormat("x = {0}, ", cinfo.x);
 				luaString.AppendFormat("y = {0}, ", cinfo.y);
+				luaString.AppendFormat("yoffset = {0}, ", cinfo.yoffset);
 				luaString.AppendFormat("width = {0}, ", cinfo.width);
 				luaString.AppendFormat("height = {0}, ", cinfo.height);
 				luaString.AppendFormat("atlas = {0}", cinfo.atlas);
@@ -84,15 +91,16 @@ namespace RbxFontBuilder
 		public sealed class characterInfo
 		{
 			public char character;
-			public int xadvance, x, y, width, height, atlas;
+			public int xadvance, x, y, yoffset, width, height, atlas;
 
-			public characterInfo(char character, int xadvance, int x, int y, int width, int height, int atlas)
+			public characterInfo(char character, int xadvance, int x, int y, int yoffset, int width, int height, int atlas)
 			{
 				this.character = character;
 				this.xadvance = xadvance;
 				this.x = x;
 				this.y = y;
-				this.width = width;
+				this.yoffset = yoffset;
+                this.width = width;
 				this.height = height;
 				this.atlas = atlas;
 			}
