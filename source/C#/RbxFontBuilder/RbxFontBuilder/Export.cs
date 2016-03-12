@@ -181,10 +181,14 @@ namespace RbxFontBuilder
 						int imgY = (int)posY;
 						int yoffset = face.Glyph.Metrics.VerticalAdvance.ToInt32() - face.Glyph.Metrics.HorizontalBearingY.ToInt32();
 
-						FTBitmap ftbmp = face.Glyph.Bitmap;
-						Bitmap copy = ftbmp.ToGdipBitmap(Color.White);
-						graphics.DrawImageUnscaled(copy, imgX, imgY);
-
+						// some fonts that might be missing characters will leave open spaces because their bitmap is empty.
+						if (face.Glyph.Bitmap.Width > 0)
+						{
+							FTBitmap ftbmp = face.Glyph.Bitmap;
+							Bitmap copy = ftbmp.ToGdipBitmap(Color.White);
+							graphics.DrawImageUnscaled(copy, imgX, imgY);
+						}
+                        
 						info.addCharacter(c, new Info.characterInfo(c, xadvance, imgX, imgY, yoffset, imgWidth, imgHeight, atlas));
 
 						posX += (float)imgWidth + (float)padX;
