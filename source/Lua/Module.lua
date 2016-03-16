@@ -1,9 +1,9 @@
 --[[
-	Rbx_CustomFont - C#
+	Rbx_CustomFont - C# version
 	Sprite creation module for custom text fonts.
 	@author EgoMoose
 	@link http://www.roblox.com/Rbx-CustomFont-item?id=230767320
-	@date 11/03/2016
+	@date 16/03/2016
 --]]
 
 -- Github	: https://github.com/EgoMoose/Rbx_CustomFont
@@ -146,10 +146,8 @@ function defaultHide(child)
 	child.TextStrokeTransparency = 2;
 end;
 
-function newBackground(child)
-	local frame = Instance.new("Frame", child);
-	
-	-- todo: apply a mouse hover colour change to emmulate textbuttons
+function newBackground(child, class)
+	local frame = Instance.new(class or "Frame", child);
 	
 	frame.Name = "_background";
 	frame.Size = UDim2.new(1, 0, 1, 0);
@@ -163,10 +161,23 @@ function newBackground(child)
 end;
 
 function getStringWidth(text, settings, size)
-	local len, characterSet = 0, settings.styles[settings.style][size or settings.size].characters;
-	for i = 1, #text do
-		local char =  characterSet[string.byte(string.sub(text, i, i))];
+	local len, sizeSet = 0, settings.styles[settings.style][size or settings.size];
+	for index = 1, #text do	
+		
+		local index2 = index + 1 <= #text and index + 1;
+		local byte = string.byte(string.sub(text, index, index));
+		local nextByte = index2 and string.byte(string.sub(text, index2, index2));		
+			
+		local char = sizeSet.characters[byte];
 		len = len + char.xadvance;
+		
+		-- apply kerning
+		local kern = Vector2.new();
+		if nextByte and sizeSet.kerning[byte] and sizeSet.kerning[byte][nextByte] then
+			kern = Vector2.new(sizeSet.kerning[byte][nextByte].x, sizeSet.kerning[byte][nextByte].y);
+		end;
+		
+		len = len + kern.x;
 	end;
 	return len;
 end;
@@ -209,7 +220,7 @@ function wrapText(child, text, settings, size)
 end;
 
 function scaleText(self, child, text, settings)
-	-- idk why, but without this the table keeps getting sorted from least to greatest...
+	-- idk why, but without this the table keeps getting sorted from least to greatest automatically...
 	table.sort(settings.information.sizes, function(a, b) return a > b; end);
 	local bestSize = settings.information.sizes[1];
 	
@@ -223,7 +234,7 @@ function scaleText(self, child, text, settings)
 			height = height + getStringHeight(line, settings, size)
 		end;
 		
-		local width, height = math.max(unpack(widths)) * self.Scale, #lines * (height * self.Scale);
+		local width, height = math.max(unpack(widths)) * self.Scale, (height * self.Scale);
 		if width <= math.abs(child.AbsoluteSize.x) and height <= math.abs(child.AbsoluteSize.y) then
 			bestSize = size;
 			break;
@@ -397,9 +408,9 @@ function settings.new(font, this)
 	local self = setmetatable({}, {__index = settings});
 	
 	-- place data in new format for easy access
-	self.information = font.information;
+	self.information = font.font.information;
 	self.atlases = font.atlases;
-	self.styles = font.styles;
+	self.styles = font.font.styles;
 	
 	-- sort from least to greatest
 	table.sort(self.information.sizes, function(a, b) return a > b; end);
@@ -466,7 +477,7 @@ end;
 
 local cfont = {};
 
-function cfont.new(font, class)
+function cfont.new(font, class, button)
 	local self = cevents.new {};
 	local exists = not (type(class) == "string");
 	
@@ -475,7 +486,7 @@ function cfont.new(font, class)
 	local fontModule = fonts:FindFirstChild(font);
 	local settings = settings.new(require(fontModule), self);
 	
-	local background = newBackground(child);
+	local background = newBackground(child, button and "TextButton");
 	local drawnCharacters, properties, propObjects, events = {}, {}, {}, {};
 	
 	-- set settings
@@ -666,7 +677,7 @@ local module = {};
 
 for _, class in next, {"TextLabel", "TextBox", "TextButton", "TextReplace"} do
 	module[string.sub(class, 5)] = function(fontName, child)
-		return cfont.new(fontName, class == "TextReplace" and child or class);
+		return cfont.new(fontName, class == "TextReplace" and child or class, class == "TextButton");
 	end;
 end;
 

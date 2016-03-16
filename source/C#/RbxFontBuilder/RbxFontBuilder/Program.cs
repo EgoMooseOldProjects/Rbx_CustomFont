@@ -13,10 +13,10 @@ namespace RbxFontBuilder
 		{
 			Console.WriteLine("Leave values empty to use default.\n");
 
-			int width = Inputs.numberInput("Please enter max width: ", 1024);
-			int height = Inputs.numberInput("Please enter max height: ", 1024);
-			List<int> sizes = Inputs.sizeInput("Please enter sizes: ");
-			string characters = Inputs.characterSet("Please enter character list: ");
+			int width = Inputs.numberInput("Please enter max width (default: 1024): ", 1024);
+			int height = Inputs.numberInput("Please enter max height (default: 1024): ", 1024);
+			List<int> sizes = Inputs.sizeInput("Please enter sizes (default: studio enums): ");
+			string characters = Inputs.characterSet("Please enter character list (default: bytes 32-125): ");
 
 			string outputPath = "";
 			Dictionary<string, List<Face>> families = new Dictionary<string, List<Face>>();

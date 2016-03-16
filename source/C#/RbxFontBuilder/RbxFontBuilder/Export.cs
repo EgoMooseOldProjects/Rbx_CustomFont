@@ -71,7 +71,7 @@ namespace RbxFontBuilder
 			Graphics graphics = Graphics.FromImage(bitmap);
 			graphics.Clear(Color.Transparent);
 
-			string output = "local font = {\n\tinformation = {\n";
+			string output = "module.font = {\n\tinformation = {\n";
 			output += "\t\tfamily = \"" + family + "\";\n";
 			output += "\t\tstyles = {" + string.Join(", ", getStyles()) + "};\n";
 			output += "\t\tsizes = {" + string.Join(", ", sizes) + "};\n";
@@ -219,7 +219,24 @@ namespace RbxFontBuilder
 				bmp.Save(outputPath + "\\" + family + "_" + count + ".png");
 			}
 
-			File.WriteAllText(outputPath + "\\" + family + ".lua", output);
+			string header = "--[[\n\t@Font " + family + "\n";
+			header += "\t@Sizes {" + string.Join(", ", sizes) + "}\n";
+			header += "\t@Author N/A\n";
+			header += "\t@Link N/A\n--]]\n\n";
+
+			header += "local module = {};\n\n";
+			header += "module.atlases = {\n";
+
+			for (int i = 1; i <= count; i++)
+			{
+				header += "\t[" + i + "] = \"rbxassetid://\";\n";
+			}
+
+			header += "};\n\n" + output;
+			header += "\n\nreturn module;";
+			
+
+			File.WriteAllText(outputPath + "\\" + family + ".lua", header);
 		}
 	}
 }
