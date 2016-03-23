@@ -3,12 +3,10 @@
 	Sprite creation module for custom text fonts.
 	@author EgoMoose
 	@link http://www.roblox.com/Rbx-CustomFont-item?id=230767320
-	@date 16/03/2016
+	@date 23/03/2016
 --]]
 
 -- Github	: https://github.com/EgoMoose/Rbx_CustomFont
--- API		: https://github.com/EgoMoose/Rbx_CustomFont/wiki/API
--- Fonts	: https://github.com/EgoMoose/Rbx_CustomFont/wiki/Making-your-own-font
 
 ------------------------------------------------------------------------------------------------------------------------------
 --// Setup
@@ -147,7 +145,7 @@ function defaultHide(child)
 end;
 
 function newBackground(child, class)
-	local frame = Instance.new(class or "Frame", child);
+	local frame = Instance.new("Frame", child);
 	
 	frame.Name = "_background";
 	frame.Size = UDim2.new(1, 0, 1, 0);
@@ -156,6 +154,21 @@ function newBackground(child, class)
 	frame.BorderSizePixel = child.BorderSizePixel;
 	frame.BorderColor3 = child.BorderColor3;
 	frame.ZIndex = child.ZIndex;
+	
+	if class == "TextButton" then
+		frame.MouseEnter:connect(function()
+			if child.AutoButtonColor then 
+				local origin = child.BackgroundColor3;
+				frame.BackgroundColor3 = Color3.new(origin.r - 75/255, origin.g - 75/255, origin.b - 75/255); 
+			end;
+		end);
+		
+		child.MouseLeave:connect(function()
+			if child.AutoButtonColor then
+				frame.BackgroundColor3 = child.BackgroundColor3;
+			end;
+		end);
+	end;
 	
 	return frame;
 end;
@@ -677,7 +690,7 @@ local module = {};
 
 for _, class in next, {"TextLabel", "TextBox", "TextButton", "TextReplace"} do
 	module[string.sub(class, 5)] = function(fontName, child)
-		return cfont.new(fontName, class == "TextReplace" and child or class, class == "TextButton");
+		return cfont.new(fontName, class == "TextReplace" and child or class, class == "TextButton" or (class == "TextReplace" and child:IsA("TextButton")));
 	end;
 end;
 
