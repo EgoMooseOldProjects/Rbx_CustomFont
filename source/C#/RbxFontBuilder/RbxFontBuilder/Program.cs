@@ -11,6 +11,7 @@ namespace RbxFontBuilder
 		[STAThread]
 		static void Main(string[] args)
 		{
+			// Console.WriteLine(Environment.Is64BitProcess);
 			Console.WriteLine("Leave values empty to use default.\n");
 
 			int width = Inputs.numberInput("Please enter max width (default: 1024): ", 1024);

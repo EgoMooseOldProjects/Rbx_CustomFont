@@ -2,6 +2,5 @@ C:\Users\Michael.Michael-PC\Documents\GitHub\Rbx_CustomFont\source\C#\RbxFontBui
 C:\Users\Michael.Michael-PC\Documents\GitHub\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\bin\Release\RbxFontBuilder.exe
 C:\Users\Michael.Michael-PC\Documents\GitHub\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\bin\Release\RbxFontBuilder.pdb
 C:\Users\Michael.Michael-PC\Documents\GitHub\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\bin\Release\SharpFont.dll
-C:\Users\Michael.Michael-PC\Documents\GitHub\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\obj\Release\RbxFontBuilder.csprojResolveAssemblyReference.cache
 C:\Users\Michael.Michael-PC\Documents\GitHub\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\obj\Release\RbxFontBuilder.exe
 C:\Users\Michael.Michael-PC\Documents\GitHub\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\obj\Release\RbxFontBuilder.pdb
