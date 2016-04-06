@@ -3,10 +3,11 @@
 	Sprite creation module for custom text fonts.
 	@author EgoMoose
 	@link http://www.roblox.com/Rbx-CustomFont-item?id=230767320
-	@date 23/03/2016
+	@date 05/04/2016
 --]]
 
 -- Github	: https://github.com/EgoMoose/Rbx_CustomFont
+-- Fonts 	: https://github.com/EgoMoose/Rbx_CustomFont/wiki/Creating-your-own-font
 
 ------------------------------------------------------------------------------------------------------------------------------
 --// Setup
@@ -283,10 +284,46 @@ function drawCharacter(byte, nextByte, child, self, settings, parent)
 	
 	-- position and size the frame
 	sprite.Position = UDim2.new(0, kern.x * self.Scale, 0, (character.yoffset + kern.y) * self.Scale);
-	sprite.Size = UDim2.new(0, character.width * self.Scale, 0, character.height * self.Scale); -- multiply by scale property
+	sprite.Size = UDim2.new(0, character.width * self.Scale, 0, character.height * self.Scale); -- multiply by scale property	
 	
-	sprite.Parent = parent;
+	--sprite.Parent = parent;
+	
 	return sprite, kern;
+end;
+
+local strokethickness = 2;
+function textStroke(sprite, self, child, shift)
+	if self.TextStrokeTransparency < 1 then
+		local size = sprite.AbsoluteSize;
+		local position = sprite.AbsolutePosition - child.AbsolutePosition;
+		
+		local top = sprite:Clone();
+		top.ImageColor3 = child.TextStrokeColor3;
+		top.ImageTransparency = self.TextStrokeTransparency;
+		--top.Size = UDim2.new(0, size.x + (strokethickness * 3), 0, size.y);
+		top.Position = UDim2.new(0, position.x, 0, position.y - strokethickness);
+		
+		local bottom = sprite:Clone();
+		bottom.ImageColor3 = child.TextStrokeColor3;
+		bottom.ImageTransparency = self.TextStrokeTransparency;
+		--bottom.Size = UDim2.new(0, size.x + (strokethickness * 2), 0, size.y);
+		bottom.Position = UDim2.new(0, position.x, 0, position.y + strokethickness);
+		
+		local left = sprite:Clone();
+		left.ImageColor3 = child.TextStrokeColor3;
+		left.ImageTransparency = self.TextStrokeTransparency;
+		left.Size = UDim2.new(0, size.x, 0, size.y + (strokethickness*2));
+		left.Position = UDim2.new(0, position.x + strokethickness, 0, position.y - strokethickness);
+		
+		local right = sprite:Clone();
+		right.ImageColor3 = child.TextStrokeColor3;
+		right.ImageTransparency = self.TextStrokeTransparency;
+		right.Size = UDim2.new(0, size.x, 0, size.y + (strokethickness*2));
+		right.Position = UDim2.new(0, position.x - strokethickness, 0, position.y - strokethickness);
+		--]]		
+		
+		return {top, bottom, left, right};
+	end;
 end;
 
 function drawLine(text, currentHeight, child, self, settings, parent, allSprites)
@@ -312,6 +349,7 @@ function drawLine(text, currentHeight, child, self, settings, parent, allSprites
 	local adjust = (math.abs(child.AbsoluteSize.x) - width) * xalign;
 	for _, character in next, sprites do
 		character.Position = character.Position + UDim2.new(0, adjust, 0, 0);
+		character.Parent = parent;
 	end;
 	
 	return width;
@@ -335,6 +373,15 @@ function drawLines(text, child, self, settings, parent)
 	
 	for _, sprite in next, allSprites do
 		sprite.Position = sprite.Position + UDim2.new(0, 0, yalign, -height * yalign);
+		local stroke = textStroke(sprite, self, child);
+		if stroke then
+			for _, strk in ipairs(stroke) do
+				strk.Name = "stroke_"..sprite.Name;
+				strk.Parent = parent;
+			end;
+		end;
+		sprite.Parent = nil;
+		sprite.Parent = parent;
 	end;
 	
 	self.TextFits = child.AbsoluteSize.x > math.max(unpack(widths)) and child.AbsoluteSize.y > height;
@@ -600,7 +647,7 @@ function cfont.new(font, class, button)
 	end);
 	
 	self:connect("TextStrokeTransparency", function(newValue)
-		
+		drawText();
 	end);
 	
 	-- connect the real listeners	
@@ -693,5 +740,7 @@ for _, class in next, {"TextLabel", "TextBox", "TextButton", "TextReplace"} do
 		return cfont.new(fontName, class == "TextReplace" and child or class, class == "TextButton" or (class == "TextReplace" and child:IsA("TextButton")));
 	end;
 end;
+
+wait(); -- top bar can mess with stuff if fonts called instantly
 
 return module;
