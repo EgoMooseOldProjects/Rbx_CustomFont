@@ -50,6 +50,6 @@ Portions of this software are copyright (c) 2016 The FreeType Project
 
 Finally, the project itself is licensed under the MIT license which can be read [here.](https://github.com/EgoMoose/Rbx_CustomFont/blob/master/LICENSE)
 
-## contributors
+## Contributors
 
 Thanks to [Gskartwii](https://github.com/Gskartwii) for getting the font builder running on 64-bit processes!
