@@ -53,4 +53,5 @@ Finally, the project itself is licensed under the MIT license which can be read 
 ## Contributors
 
 Thanks to [Gskartwii](https://github.com/Gskartwii) for getting the font builder running on 64-bit processes!
+
 [AdarkTheCoder](https://github.com/AdarkTheCoder) made the GUI or whatever.
