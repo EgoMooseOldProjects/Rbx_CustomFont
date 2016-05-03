@@ -13,3 +13,5 @@ C:\Users\Adam Albee\Documents\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBui
 C:\Users\Adam Albee\Documents\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\obj\Release\RbxFontBuilder.csprojResolveAssemblyReference.cache
 C:\Users\Adam Albee\Documents\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\obj\Release\RbxFontBuilder.InputGui.resources
 C:\Users\Adam Albee\Documents\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\obj\Release\RbxFontBuilder.csproj.GenerateResource.Cache
+C:\Users\Michael.Michael-PC\Documents\GitHub\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\obj\Release\RbxFontBuilder.InputGui.resources
+C:\Users\Michael.Michael-PC\Documents\GitHub\Rbx_CustomFont\source\C#\RbxFontBuilder\RbxFontBuilder\obj\Release\RbxFontBuilder.csproj.GenerateResource.Cache

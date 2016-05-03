@@ -61,41 +61,57 @@ namespace RbxFontBuilder {
 				outputPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 			}
 
-			Dictionary<string, List<Face>> families = new Dictionary<string, List<Face>>();
-			foreach (string path in fileNames) {
-				Face face = new Face(library, path);
+			if (fileNames != null)
+			{
+				Dictionary<string, List<Face>> families = new Dictionary<string, List<Face>>();
+				foreach (string path in fileNames)
+				{
+					Face face = new Face(library, path);
 
-				if (families.ContainsKey(face.FamilyName)) {
-					families[face.FamilyName].Add(face);
-				} else {
-					// Check if files for a given name already exist, prompt user.
-					uint min = 0;
-					if (System.IO.Directory.GetFiles(outputPath, face.FamilyName + ".otf", System.IO.SearchOption.TopDirectoryOnly).Length > 0) {
-						min = 1;
-					} else if (System.IO.Directory.GetFiles(outputPath, face.FamilyName + ".ttf", System.IO.SearchOption.TopDirectoryOnly).Length > 0) {
-						min = 1;
-					} // Gross, but the line is super duper long, and this is necessary.
+					if (families.ContainsKey(face.FamilyName))
+					{
+						families[face.FamilyName].Add(face);
+					}
+					else
+					{
+						// Check if files for a given name already exist, prompt user.
+						uint min = 0;
+						if (System.IO.Directory.GetFiles(outputPath, face.FamilyName + ".otf", System.IO.SearchOption.TopDirectoryOnly).Length > 0)
+						{
+							min = 1;
+						}
+						else if (System.IO.Directory.GetFiles(outputPath, face.FamilyName + ".ttf", System.IO.SearchOption.TopDirectoryOnly).Length > 0)
+						{
+							min = 1;
+						} // Gross, but the line is super duper long, and this is necessary.
 
-					if (!handled.Contains(face.FamilyName)) {
-						if (System.IO.Directory.GetFiles(outputPath, face.FamilyName + "*" , System.IO.SearchOption.TopDirectoryOnly).Length > min) {
-							if (MessageBox.Show("Files for the font '" + face.FamilyName + "' already exist in the output directory.\nOverwrite them?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) {
+						if (!handled.Contains(face.FamilyName))
+						{
+							if (System.IO.Directory.GetFiles(outputPath, face.FamilyName + "*", System.IO.SearchOption.TopDirectoryOnly).Length > min)
+							{
+								if (MessageBox.Show("Files for the font '" + face.FamilyName + "' already exist in the output directory.\nOverwrite them?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+								{
+									families[face.FamilyName] = new List<Face> { face };
+								}
+								handled.Add(face.FamilyName);
+							}
+							else
+							{
 								families[face.FamilyName] = new List<Face> { face };
 							}
-							handled.Add(face.FamilyName);
-						} else {
-							families[face.FamilyName] = new List<Face> { face };
 						}
 					}
 				}
 
-				foreach (KeyValuePair<string, List<Face>> kvp in families) {
+				foreach (KeyValuePair<string, List<Face>> kvp in families)
+				{
 					Export export = new Export(w, h, sizeList, kvp.Value, kvp.Key, characters);
 					export.ExportFont(outputPath);
 					count++;
 				}
-			}
 
-			outputText.Text = "Generated " + count + " font" + (count==1?"":"s") + "!";
+				outputText.Text = "Generated " + count + " font" + (count == 1 ? "" : "s") + "!";
+			}
 		}
 
 		// Input validation
