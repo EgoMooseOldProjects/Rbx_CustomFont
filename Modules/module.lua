@@ -205,7 +205,7 @@ local function getStringWidth(text, sizeSet)
 		if (b2 and sizeSet.kerning[b] and sizeSet.kerning[b][b2]) then
 			kernx = sizeSet.kerning[b][b2].x;
 		end;
-		length = length + (i2 and sizeSet.characters[b].xadvance or sizeSet.characters[b].width) + kernx;
+		length = length + sizeSet.characters[b].xadvance + kernx;
 	end;
 	return length;
 end;
@@ -604,6 +604,14 @@ function customFont.new(fontName, class, isButton)
 			pcall(function() background[property] = child[property]; end);
 		end;
 	end));
+	
+	if (child:IsA("TextBox")) then
+		insert(events, child.Focused:connect(function()
+			if (child.ClearTextOnFocus) then
+				child.Text = "";
+			end;
+		end));
+	end;
 	
 	-- methods
 	
