@@ -1,0 +1,14 @@
+{
+	"manifest_version": 2,
+
+	"name": "Custom font atlas uploader",
+	"description": "This extension allows users to upload multiple assets",
+	"version": "1.0",
+
+	"content_scripts": [ {
+		"all_frames": true,
+		"js": [ "jquery-3.1.1.min.js", "script.js" ],
+		"matches": [ "*://*.roblox.com/build/upload*" ]
+	} ],
+	"permissions": [ "*://*.roblox.com/" ]
+}
