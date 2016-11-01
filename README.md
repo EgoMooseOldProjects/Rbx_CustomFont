@@ -1,5 +1,7 @@
 # Rbx_CustomFont
 
+**THIS PROJECT HAS BEEN HANDED OFF TO [GSKARTWII](https://github.com/Gskartwii). YOU CAN FIND THE PROJECT [HERE](https://github.com/Gskartwii/Rbx_CustomFont).**
+
 ## Custom font system for Roblox
 
 This is a module built for Roblox studio to allow the usage of any OpenType (.otf) or TrueType (.ttf) font in Roblox by converting them into spritesheets and then wrapping normal GUI text objects so they work with the spiresheets.
